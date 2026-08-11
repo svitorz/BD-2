@@ -21,8 +21,9 @@ create table aluno(
 -- 1 x 1 com curso
 create table coordenador(
 	cod_coord int,
-	cod_curso int unique,
+	cod_curso int,
 	nome varchar(50),
 	constraint pk_coord primary key (cod_coord),
+	constraint unique_cod_curso unique (cod_curso),
 	constraint fk_coord_curso foreign key (cod_curso) references curso
 );
