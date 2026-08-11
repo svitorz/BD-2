@@ -1,1 +1,0 @@
-# Relacionamentos com entidades fracas, ternários e NxN
