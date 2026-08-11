@@ -1,0 +1,1 @@
+# Atividades semanais de SQL
