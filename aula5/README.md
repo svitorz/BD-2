@@ -1,0 +1,1 @@
+# Agreregação, group by e operador like e ilike
