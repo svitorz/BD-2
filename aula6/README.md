@@ -1,0 +1,1 @@
+# Junções com SQL utilizando Inner Join + agregação entre relações
