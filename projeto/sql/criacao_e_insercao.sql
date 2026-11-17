@@ -1,93 +1,90 @@
-create table estadios(
-	idEstadio SERIAL,
-	nome varchar(50) not null,
-	constraint pk_estadio primary key (idEstadio)
+
+CREATE TABLE estadios (
+    idEstadio SERIAL,
+    nome VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_estadio PRIMARY KEY (idEstadio)
 );
 
-alter table estadios drop column nome;
-alter table estadios add column nome varchar(255);
-
-create table estadios_endereco(
-	idEstadio SERIAL unique,
-	rua varchar(255),
-	numero integer,
-	bairro varchar(150),
-	cidade varchar(50),
-	cep varchar(9),
-	constraint pk_estadio_endereco primary key (idEstadio),
-	constraint fk_estadio_endereco foreign key (idEstadio)
-		references estadios(idEstadio)
+CREATE TABLE estadios_endereco (
+    idEstadio INTEGER,
+    rua VARCHAR(255),
+    numero INTEGER,
+    bairro VARCHAR(150),
+    cidade VARCHAR(50),
+    cep VARCHAR(9),
+    CONSTRAINT pk_estadio_endereco PRIMARY KEY (idEstadio),
+    CONSTRAINT fk_estadio_endereco FOREIGN KEY (idEstadio)
+        REFERENCES estadios(idEstadio)
 );
 
-create table juizes(
-	idJuiz SERIAL,
-	nome varchar(255),
-	funcao varchar(100),
-	constraint pk_juiz primary key (idJuiz)
+CREATE TABLE juizes (
+    idJuiz SERIAL,
+    nome VARCHAR(255),
+    funcao VARCHAR(100),
+    CONSTRAINT pk_juiz PRIMARY KEY (idJuiz)
 );
 
-create table times(
-	idTime SERIAL,
-	nome varchar(255),
-	data_criacao date,
-	nome_tecnico varchar(255),
-	constraint pk_times primary key (idTime)
+CREATE TABLE times (
+    idTime SERIAL,
+    nome VARCHAR(255),
+    data_criacao DATE,
+    nome_tecnico VARCHAR(255),
+    CONSTRAINT pk_times PRIMARY KEY (idTime)
 );
 
-create table partidas(
-	idPartida SERIAL,
-	data_hora timestamp,
-	rodada integer,
-	golsCasa integer,
-	golsFora integer,
-	idEstadio integer,
-	idTimeCasa integer,
-	idTimeFora integer,
-	constraint pk_partidas primary key(idPartida),
-	constraint fk_partida_estadio foreign key (idEstadio)
-		references estadios (idEstadio),
-	constraint fk_time_casa foreign key (idTimeCasa)
-		references times(idTime),
-	constraint fk_time_fora foreign key(idTimeFora)
-		references times(idTime)
+CREATE TABLE partidas (
+    idPartida SERIAL,
+    data_hora TIMESTAMP,
+    rodada INTEGER,
+    golsCasa INTEGER,
+    golsFora INTEGER,
+    idEstadio INTEGER,
+    idTimeCasa INTEGER,
+    idTimeFora INTEGER,
+    CONSTRAINT pk_partidas PRIMARY KEY (idPartida),
+    CONSTRAINT fk_partida_estadio FOREIGN KEY (idEstadio)
+        REFERENCES estadios(idEstadio),
+    CONSTRAINT fk_time_casa FOREIGN KEY (idTimeCasa)
+        REFERENCES times(idTime),
+    CONSTRAINT fk_time_fora FOREIGN KEY (idTimeFora)
+        REFERENCES times(idTime)
 );
 
-create table atletas(
-	idAtleta SERIAL,
-	nome varchar(255),
-	numero integer,
-	idTime integer,
-	constraint pk_atleta primary key(idAtleta),
-	constraint fk_atletas_times foreign key (idTime)
-		references times (idTime)
+CREATE TABLE atletas (
+    idAtleta SERIAL,
+    nome VARCHAR(255),
+    numero INTEGER,
+    idTime INTEGER,
+    CONSTRAINT pk_atleta PRIMARY KEY (idAtleta),
+    CONSTRAINT fk_atletas_times FOREIGN KEY (idTime)
+        REFERENCES times(idTime)
 );
 
-create table partidas_juizes(
-	idJuiz integer unique,
-	idPartida integer unique,
-	constraint no_duplicate_partidas unique(idJuiz, idPartida),
-	constraint pk_partidas_juizes primary key (idJuiz, idPartida),
-	constraint fk_partidas_juizes_partidas foreign key (idPartida)
-		references partidas(idPartida),
-	constraint fk_partidas_juizes_juizes foreign key(idJuiz)
-		references juizes(idJuiz)
+CREATE TABLE partidas_juizes (
+    idJuiz INTEGER,
+    idPartida INTEGER,
+    CONSTRAINT pk_partidas_juizes PRIMARY KEY (idJuiz, idPartida),
+    CONSTRAINT fk_partidas_juizes_partidas FOREIGN KEY (idPartida)
+        REFERENCES partidas(idPartida),
+    CONSTRAINT fk_partidas_juizes_juizes FOREIGN KEY (idJuiz)
+        REFERENCES juizes(idJuiz)
 );
 
-create table atua(
-	idAtleta integer,
-	idPartida integer,
-	posicao varchar(50),
-	cartao_amarelo integer,
-	cartao_vermelho integer,
-	gols integer,
-	assistencias integer,
-	constraint unique_atua unique (idAtleta, idPartida),
-	constraint pk_atletas_atua primary key (idAtleta, idPartida),
-	constraint fk_atleta_atua foreign key (idAtleta)
-		references atletas (idAtleta),
-	constraint fk_partida_atua foreign key (idPartida)
-		references partidas (idPartida)
+CREATE TABLE atua (
+    idAtleta INTEGER,
+    idPartida INTEGER,
+    posicao VARCHAR(50),
+    cartao_amarelo INTEGER,
+    cartao_vermelho INTEGER,
+    gols INTEGER,
+    assistencias INTEGER,
+    CONSTRAINT pk_atletas_atua PRIMARY KEY (idAtleta, idPartida),
+    CONSTRAINT fk_atleta_atua FOREIGN KEY (idAtleta)
+        REFERENCES atletas(idAtleta),
+    CONSTRAINT fk_partida_atua FOREIGN KEY (idPartida)
+        REFERENCES partidas(idPartida)
 );
+
 
 INSERT INTO times (nome, data_criacao, nome_tecnico) VALUES
 ('Athletico Paranaense', '1924-03-26', 'Odair Hellmann'),
@@ -111,6 +108,7 @@ INSERT INTO times (nome, data_criacao, nome_tecnico) VALUES
 ('Vasco da Gama', '1898-08-21', 'Fernando Diniz'),
 ('Vitória', '1899-05-13', 'Cléber dos Santos (interino)');
 
+
 INSERT INTO estadios (nome) VALUES
 ('Ligga Arena'),
 ('Arena MRV'),
@@ -133,7 +131,8 @@ INSERT INTO estadios (nome) VALUES
 ('Barradão'),
 ('Arena Castelão');
 
-INSERT INTO estadios_endereco (idEstadio, rua, numero, bairro, cidade, cep) VALUES
+INSERT INTO estadios_endereco
+(idEstadio, rua, numero, bairro, cidade, cep) VALUES
 (1, 'Rua Buenos Aires', 1260, 'Água Verde', 'Curitiba', '80250-070'),
 (2, 'Rua Cristina Maria de Assis', 202, 'Califórnia', 'Belo Horizonte', '30860-830'),
 (3, 'Ladeira da Fonte das Pedras', 0, 'Nazaré', 'Salvador', '40050-565'),
@@ -155,6 +154,7 @@ INSERT INTO estadios_endereco (idEstadio, rua, numero, bairro, cidade, cep) VALU
 (19, 'Rua Artêmio Valente', 1, 'Canabrava', 'Salvador', '41260-300'),
 (20, 'Avenida Alberto Craveiro', 2901, 'Castelão', 'Fortaleza', '60860-025');
 
+
 INSERT INTO juizes (nome, funcao) VALUES
 ('Raphael Claus', 'Árbitro Principal'),
 ('Wilton Pereira Sampaio', 'Árbitro Principal'),
@@ -165,7 +165,10 @@ INSERT INTO juizes (nome, funcao) VALUES
 ('Rafael Rodrigo Klein', 'Árbitro Principal'),
 ('Paulo César Zanovelli', 'Árbitro Principal'),
 ('Rodrigo D''Alonso Ferreira', 'Árbitro de Vídeo (VAR)'),
-('Daiane Caroline Muniz dos Santos', 'Árbitro de Vídeo (VAR)');
+('Daiane Caroline Muniz dos Santos', 'Árbitro de Vídeo (VAR)'),
+('Sávio Pereira Sampaio', 'Árbitro Principal'),
+('Matheus Delgado Candançan', 'Árbitro Principal'),
+('Rodrigo José Pereira de Lima', 'Árbitro Principal');
 
 
 INSERT INTO atletas (nome, numero, idTime) VALUES
@@ -175,9 +178,105 @@ INSERT INTO atletas (nome, numero, idTime) VALUES
 ('Giorgian de Arrascaeta', 14, 9),
 ('Pedro', 9, 9),
 ('Gerson', 8, 9),
-('Raphael Veiga', 23, 13),
-('Flaco López', 42, 13),
-('Gustavo Gómez', 15, 13),
-('Lucas Moura', 7, 17),
-('Jonathan Calleri', 9, 17),
-('Luciano', 10, 17);
+('Raphael Veiga', 23, 14),
+('Flaco López', 42, 14),
+('Gustavo Gómez', 15, 14),
+('Lucas Moura', 7, 18),
+('Jonathan Calleri', 9, 18),
+('Luciano', 10, 18),
+('Alexander Barboza', 0, 4),
+('Agustín Giay', 0, 14),
+('Joaquín Piquerez', 0, 14),
+('Marlon Freitas', 0, 4),
+('Memphis Depay', 0, 6),
+('Gustavo Henrique', 0, 6),
+('Matheus Bidu', 0, 6),
+('Kaio César', 0, 6),
+('Matheuzinho', 0, 6),
+('André Ramalho', 0, 6),
+('Neymar', 0, 17),
+('Gabigol', 0, 17),
+('Éverton Cebolinha', 0, 9),
+('Philippe Coutinho', 0, 19),
+('João Schmidt', 0, 17),
+('Luan Peres', 0, 17),
+('Benjamín Rollheiser', 0, 17),
+('Luciano Juba', 0, 3),
+('Bruno Santos', 0, 13),
+('Edson Carioca', 0, 13),
+('Samuel Lino', 0, 9),
+('Amuzu', 0, 11),
+('Walter Kannemann', 0, 11),
+('Bruno Duarte', 0, 19),
+('Andrés Gómez', 0, 19),
+('Dylan Borrero', 0, 5),
+('Túlio Eduardo', 0, 5);
+
+
+INSERT INTO partidas
+(data_hora, rodada, golsCasa, golsFora, idEstadio, idTimeCasa, idTimeFora)
+VALUES
+('2026-10-11 17:30:00', 30, 4, 1, 13, 14, 6),
+('2026-10-24 21:00:00', 32, 1, 1, 16, 17, 3),
+('2026-10-28 19:30:00', 33, 0, 0, 16, 17, 14),
+('2026-10-30 20:00:00', 33, 2, 0, 6, 6, 13),
+('2026-11-04 19:30:00', 34, 3, 1, 9, 9, 11),
+('2026-11-14 20:30:00', 21, 0, 2, 5, 5, 19);
+
+
+INSERT INTO partidas_juizes (idJuiz, idPartida) VALUES
+(3, 1),
+(11, 2),
+(6, 3),
+(12, 4),
+(8, 5),
+(13, 6);
+
+
+
+INSERT INTO atua
+(idAtleta, idPartida, posicao, cartao_amarelo, cartao_vermelho, gols, assistencias)
+VALUES
+(15, 1, 'Zagueiro', 0, 0, 1, 0),
+(14, 1, 'Lateral', 1, 0, 0, 0),
+(18, 1, 'Zagueiro', 0, 0, 1, 0),
+(19, 1, 'Lateral', 0, 0, 0, 0),
+(17, 1, 'Atacante', 1, 0, 0, 0),
+
+(23, 2, 'Atacante', 0, 1, 0, 0),
+(24, 2, 'Atacante', 0, 0, 0, 0),
+(27, 2, 'Meio-campista', 0, 0, 0, 0),
+(28, 2, 'Zagueiro', 0, 0, 1, 0),
+(29, 2, 'Meio-campista', 0, 0, 0, 1),
+(30, 2, 'Lateral', 0, 0, 1, 0),
+
+(7, 3, 'Meio-campista', 1, 0, 0, 0),
+(14, 3, 'Lateral', 1, 0, 0, 0),
+(15, 3, 'Lateral', 1, 0, 0, 0),
+(8, 3, 'Atacante', 1, 0, 0, 0),
+(9, 3, 'Zagueiro', 1, 0, 0, 0),
+(23, 3, 'Atacante', 1, 0, 0, 0),
+
+(2, 4, 'Meio-campista', 0, 0, 0, 0),
+(19, 4, 'Lateral', 0, 0, 1, 0),
+(20, 4, 'Atacante', 0, 0, 1, 0),
+(21, 4, 'Lateral', 1, 0, 0, 0),
+(22, 4, 'Zagueiro', 1, 0, 0, 0),
+(31, 4, 'Atacante', 0, 1, 0, 0),
+(32, 4, 'Atacante', 1, 0, 0, 0),
+
+(5, 5, 'Atacante', 0, 0, 2, 0),
+(33, 5, 'Atacante', 0, 0, 1, 0),
+(34, 5, 'Atacante', 0, 0, 1, 0),
+(35, 5, 'Zagueiro', 1, 0, 0, 0),
+
+(36, 6, 'Atacante', 0, 0, 2, 0),
+(37, 6, 'Atacante', 0, 0, 0, 0),
+(38, 6, 'Atacante', 0, 0, 0, 0),
+(39, 6, 'Atacante', 0, 0, 0, 0);
+
+
+
+
+
+
